@@ -107,12 +107,14 @@ action :add do
     end
 
     # build repo file
+    Chef::Log.info "building repository with uri \"#{new_resource.uri}\", distribution \"#{new_resource.distribution}\", components \"#{new_resource.components}\", arch \"#{new_resource.arch}\", deb_src \"#{new_resource.deb_src}\""
     repository = build_repo(new_resource.uri,
                             new_resource.distribution,
                             new_resource.components,
                             new_resource.arch,
                             new_resource.deb_src)
 
+    Chef::Log.info "building repo_file with name \"#{new_resource.name}.list\""
     @repo_file = file "/etc/apt/sources.list.d/#{new_resource.name}.list" do
       owner "root"
       group "root"
@@ -124,6 +126,7 @@ action :add do
     end
   end
 
+  Chef::Log.info "repo_file looks like" + @repo_file.to_s
   raise RuntimeError, "The repository file to create is nil, cannot continue." if @repo_file.nil?
   new_resource.updated_by_last_action(@repo_file.updated?)
 end
