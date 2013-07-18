@@ -89,7 +89,10 @@ action :add do
   new_resource.updated_by_last_action(false)
   @repo_file = nil
 
+  Chef::Log.info "repo_file starts out as: '" + @repo_file.to_s + "'"
+
   recipe_eval do
+    Chef::Log.info "entering recipe_eval block"
     # add key
     if new_resource.keyserver && new_resource.key
       install_key_from_keyserver(new_resource.key, new_resource.keyserver)
@@ -126,7 +129,7 @@ action :add do
     end
   end
 
-  Chef::Log.info "repo_file looks like" + @repo_file.to_s
+  Chef::Log.info "repo_file looks like: '" + @repo_file.to_s + "'"
   raise RuntimeError, "The repository file to create is nil, cannot continue." if @repo_file.nil?
   new_resource.updated_by_last_action(@repo_file.updated?)
 end
